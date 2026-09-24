@@ -1,0 +1,12 @@
+export type StoreCategory={slug:string;name:string;shortDescription:string;description:string;examples:string[];status:'available'|'coming-soon'}
+
+export const storeCategories:StoreCategory[]=[
+  {slug:'digital-planners',name:'Digital Planners',shortDescription:'Plan your priorities, projects, and everyday routines.',description:'Thoughtful digital planners to help you see what matters, organize the moving pieces, and make progress at a pace that works for you.',examples:['Daily and weekly planning','Project and goal tracking','Simple routines for staying focused'],status:'coming-soon'},
+  {slug:'journals',name:'Journals',shortDescription:'Make space to reflect, reset, and find your next step.',description:'Guided digital journals with useful prompts for reflection, creativity, and personal growth.',examples:['Guided reflection prompts','Creative journaling','Fresh-start and reset pages'],status:'coming-soon'},
+  {slug:'ecards',name:'Ecards',shortDescription:'Send a thoughtful note for the moments that matter.',description:'Digital cards designed to help you celebrate, encourage, and stay connected with your people.',examples:['Celebrations and milestones','Notes of encouragement','Thoughtful everyday messages'],status:'coming-soon'},
+  {slug:'ai-workflows',name:'AI Workflows',shortDescription:'Practical step-by-step systems that make AI useful.',description:'Repeatable workflows that connect AI tools and real tasks, with clear human review at the right moments.',examples:['Content and topic research','Research-to-summary systems','Workflows that keep you in control'],status:'available'},
+  {slug:'prompt-library',name:'Prompt Library',shortDescription:'Prompts designed around real tasks and useful outcomes.',description:'A growing library of carefully structured prompts to help you get from a blank page to a more useful first result.',examples:['Writing and content prompts','Research and synthesis prompts','Planning and problem-solving prompts'],status:'coming-soon'},
+  {slug:'ebooks',name:'E-books',shortDescription:'Clear, practical guides you can put to work right away.',description:'Focused digital guides that make a topic easier to understand and a next step easier to take.',examples:['Practical playbooks','Step-by-step guides','Reference guides for modern work'],status:'coming-soon'},
+]
+
+export function getStoreCategory(slug:string){return storeCategories.find(category=>category.slug===slug)}
