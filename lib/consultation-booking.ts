@@ -32,15 +32,13 @@ export function hasBookingStorage() {
 
 async function database(path: string, init: RequestInit = {}) {
   const { url, key } = supabaseConfig()
-  const authorization = key.startsWith('sb_secret_') ? {} : { Authorization: `Bearer ${key}` }
+  const headers = new Headers(init.headers)
+  headers.set('apikey', key)
+  headers.set('Content-Type', 'application/json')
+  if (!key.startsWith('sb_secret_')) headers.set('Authorization', `Bearer ${key}`)
   const response = await fetch(`${url}/rest/v1/${path}`, {
     ...init,
-    headers: {
-      apikey: key,
-      ...authorization,
-      'Content-Type': 'application/json',
-      ...(init.headers || {}),
-    },
+    headers,
     cache: 'no-store',
     signal: AbortSignal.timeout(10000),
   })
