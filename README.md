@@ -13,18 +13,37 @@ Use `npm run build` to create the production build and `npm start` to serve it.
 
 ## Routes
 
-- `/` — brand introduction, featured product, workflow visual, and signup placeholder
+- `/` — brand introduction, product categories, how it works, and free ebook signup
 - `/products` — product catalog with availability states
 - `/products/linkedin-content-automation` — current product detail
 - `/products/digital-planners`, `/products/journals`, `/products/ecards`, `/products/ai-workflows`, `/products/prompt-library`, and `/products/ebooks` — individual digital-store category pages
 - `/workflows` — workflow approach and example
 - `/about` — brand positioning
-- `/resources` — free workflow entry point and upcoming resources
+- `/resources` — free digital starter ebook and upcoming resources
 - `/contact` — contact details, enabled by `NEXT_PUBLIC_CONTACT_EMAIL`
 
 ## Integrations
 
-The free LinkedIn workflow signup sends an email, source label, and timestamp to the server-side `EMAIL_SIGNUP_WEBHOOK_URL`. Set this to an HTTPS webhook that accepts a JSON POST; an optional `EMAIL_SIGNUP_WEBHOOK_SECRET` is sent as a Bearer token. The PDF downloads only after the webhook confirms success. Until a webhook is configured, the site says email signup is disconnected and keeps the gated download button disabled; it does not pretend to collect addresses. The product page reads `NEXT_PUBLIC_PRODUCT_CHECKOUT_URL` for its checkout link; leave it blank until a real checkout destination is ready. No price is assumed.
+The free digital products starter ebook includes productivity worksheets, 44 ready-to-use prompts, and a workflow automation planner. The signup form requests an email to unlock the ebook and has a separate, unchecked marketing opt-in. Only people who check that box are added to the Mailchimp audience. The ebook downloads after the form succeeds even if the visitor leaves marketing consent unchecked. Mailchimp credentials are used only by the server and must never be exposed through a `NEXT_PUBLIC_` variable.
+
+### Connect Mailchimp
+
+1. In Mailchimp, create an API key in **Account & billing → Extras → API keys**. Copy it once and keep it private.
+2. Find the audience ID in **Audience → More options → Audience settings**.
+3. Set these values in `.env.local` for local development:
+
+   ```env
+   MAILCHIMP_API_KEY=your-private-api-key
+   MAILCHIMP_AUDIENCE_ID=your-audience-id
+   MAILCHIMP_SERVER_PREFIX=usXX
+   ```
+
+   The server prefix is the data-center code such as `us19`, shown after the hyphen in the API key and used in your Mailchimp account URL.
+4. In Vercel, open the project’s **Settings → Environment Variables** and add the same three values for Production (and Preview if needed). Do not use the `NEXT_PUBLIC_` prefix.
+5. Restart the local development server after changing `.env.local`. For Vercel, redeploy so the new values take effect.
+6. Submit a test address with the marketing checkbox selected and verify it appears in the intended Mailchimp audience. Then test with the box unchecked: the ebook should download but the address should not be added for marketing.
+
+Mailchimp’s API can add or update audience members. This site uses the server-side API and only submits a person as subscribed after an explicit opt-in. The product page reads `NEXT_PUBLIC_PRODUCT_CHECKOUT_URL` for its checkout link; leave it blank until a real checkout destination is ready. No price is assumed.
 
 Analytics is not active by default. Add a provider through a consent-aware script/component in `app/layout.tsx` and send events for product detail views, product CTA clicks, signup completion, and outbound checkout clicks. Keep provider credentials server-side; any `NEXT_PUBLIC_` value is public.
 
@@ -35,13 +54,8 @@ Metadata is set centrally in `app/layout.tsx` and per route. `app/sitemap.ts` an
 ## Deploy on Vercel
 
 1. Push this project to a Git repository.
-2. Set up an HTTPS webhook to add a submitted email to your mailing list. It should accept JSON with `email`, `source`, and `createdAt`, and return a successful HTTP status after saving.
-3. Import the repository in Vercel; it detects Next.js automatically.
-4. Add `NEXT_PUBLIC_SITE_URL`, `EMAIL_SIGNUP_WEBHOOK_URL`, and, when ready, `NEXT_PUBLIC_CONTACT_EMAIL` under project environment variables. Add `EMAIL_SIGNUP_WEBHOOK_SECRET` if your webhook expects a Bearer token.
-5. Deploy. Vercel will build the site on each connected Git update.
+2. Import the repository in Vercel; it detects Next.js automatically.
+3. Add `NEXT_PUBLIC_SITE_URL`, `MAILCHIMP_API_KEY`, `MAILCHIMP_AUDIENCE_ID`, `MAILCHIMP_SERVER_PREFIX`, and, when ready, `NEXT_PUBLIC_CONTACT_EMAIL` under project environment variables.
+4. Deploy. Vercel will build the site on each connected Git update.
 
-No checkout, mailing list provider, or analytics account is required to run the current MVP.
-
-### Simple webhook setup
-
-If you have not picked an email platform yet, create a webhook in an automation service such as Make, then connect that webhook to the email list you choose. Set the webhook URL in `.env.local` as `EMAIL_SIGNUP_WEBHOOK_URL` for local development and in Vercel's environment variables for production. It must accept the JSON fields `email`, `source`, and `createdAt`, and return a 2xx response after the address is saved. Restart the local server after changing `.env.local`.
+Mailchimp is optional for running the site, but the signup form stays disabled until its three server-side environment variables are configured.

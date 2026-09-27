@@ -1,27 +1,79 @@
 import Link from 'next/link'
-import { ArrowRight, ArrowUpRight, Check, Sparkles } from 'lucide-react'
-import { Eyebrow, ProductCategoryGrid, SectionHeading } from '@/components/site'
-import { WorkflowSignup } from '@/components/workflow-signup'
-import { LinkedInSalesSection } from '@/components/linkedin-sales-section'
+import { ArrowRight, ArrowUpRight, Workflow, Sparkles, Layers3, Search, Download, Play } from 'lucide-react'
+import { Eyebrow, SectionHeading } from '@/components/site'
+import { FreeEbookSignup } from '@/components/free-ebook-signup'
 
-export default function Home(){return <>
-  <section className="sales-hero section-wrap">
-    <Eyebrow>DIGITAL PRODUCTS FOR MODERN WORK</Eyebrow>
-    <h1>Make everyday work easier with <span>thoughtful digital products.</span></h1>
-    <p className="sales-hero-copy">Useful digital products give you a clear place to start. Plan with <span className="purple-emphasis">less guesswork, turn ideas into action, and reuse simple systems</span> that work for you—without building everything from scratch.</p>
-    <div className="sales-benefits">
-      <div><span><Check size={15}/></span><b>Start with structure</b><small>Spend less time setting up and more time moving forward.</small></div>
-      <div><span><Check size={15}/></span><b>Make it your own</b><small>Adapt practical tools to your goals, habits, and way of working.</small></div>
-      <div><span><Check size={15}/></span><b>Reuse what helps</b><small>Keep the routines and resources that make everyday work easier.</small></div>
-    </div>
-    <div className="hero-actions"><Link className="button button-dark" href="#digital-store">Explore the digital store <ArrowRight size={16}/></Link><Link className="text-link" href="#free-workflow">Get a free workflow <ArrowUpRight size={15}/></Link></div>
-  </section>
+const productTypes = [
+  { icon: Sparkles, name: 'Productivity Tools', copy: 'Simple tools to help you plan your day, stay organized, and make steady progress on the work that matters.', href: '/products/linkedin-content-automation' },
+  { icon: Layers3, name: 'Templates', copy: 'Ready-to-use starting points for planning, creating, and organizing your work.', href: '/products/digital-planners' },
+  { icon: Workflow, name: 'Automation', copy: 'Repeatable systems that make AI useful in the work you already do.', href: '/products/ai-workflows' },
+]
 
-  <section className="manifesto"><div className="manifesto-inner"><Eyebrow>THE FLOWMINT POINT OF VIEW</Eyebrow><h2>Don’t just use AI.<br/><span>Make something useful.</span></h2><p>AI becomes more useful when it meets the right idea, format, and moment. We create thoughtful digital products that make everyday work and life a little easier.</p><p>That belief led to our first tool: <strong>LinkedIn Content Automation.</strong> Choose a category you enjoy posting about; five specialized AI agents scan the web to find five timely topics, so you can focus on the angle only you can bring.</p><div className="manifesto-actions"><Link className="text-link" href="/about">Meet Flowmint AI <ArrowUpRight size={15}/></Link><Link className="text-link" href="/products/linkedin-content-automation">Explore LinkedIn Content Automation <ArrowUpRight size={15}/></Link></div><div className="manifesto-stamp"><Sparkles size={17}/><span>MAKE THE WORK<br/>WORK FOR YOU</span></div></div></section>
+export default function Home() {
+  return <>
+    <section className="home-hero section-wrap">
+      <div className="home-hero-copy">
+        <Eyebrow>DIGITAL PRODUCTS</Eyebrow>
+        <h1>Digital products<br /><span>for better work.</span></h1>
+        <p>Practical productivity tools, templates, and systems designed to help you work smarter.</p>
+        <div className="hero-actions">
+          <Link className="button button-dark" href="#explore-products">Explore products <ArrowRight size={16} /></Link>
+          <Link className="text-link" href="/contact">Consultation <ArrowUpRight size={15} /></Link>
+        </div>
+      </div>
+    </section>
 
-  <LinkedInSalesSection/>
+    <section className="home-product-types section-wrap" id="explore-products">
+      <SectionHeading eyebrow="EXPLORE PRODUCTS" title="Find the format that fits your work." />
+      <div className="home-category-grid">
+        {productTypes.map(({ icon: Icon, name, copy, href }) => <Link className="home-category-card" href={href} key={name}>
+          <span className="home-category-icon"><Icon size={19} /></span>
+          <h3>{name}</h3>
+          <p>{copy}</p>
+          <span className="home-category-link">Explore <ArrowUpRight size={15} /></span>
+        </Link>)}
+      </div>
+    </section>
 
-  <WorkflowSignup/>
+    <section className="home-how section-wrap">
+      <div className="home-how-heading">
+        <Eyebrow>HOW IT WORKS</Eyebrow>
+        <h2>Go from finding a product to putting it to work.</h2>
+        <p>Choose a useful starting point, get access, and adapt it to the way you work.</p>
+      </div>
+      <div className="home-how-steps">
+        {[
+          { icon: Search, number: '1', title: 'Explore', copy: 'Find a product that matches your need.' },
+          { icon: Download, number: '2', title: 'Get access', copy: 'Open the product page for details and available access options.' },
+          { icon: Play, number: '3', title: 'Use and make it yours', copy: 'Follow the guide and adapt it to your workflow.' },
+        ].map(({ icon: Icon, number, title, copy }, index) => <article className="home-how-step" key={number}>
+          <span className="home-how-number">{number}</span>
+          <Icon className="home-how-icon" size={22} />
+          <h3>{title}</h3>
+          <p>{copy}</p>
+          {index < 2 && <ArrowRight className="home-how-arrow" size={18} aria-hidden="true" />}
+        </article>)}
+      </div>
+    </section>
 
-  <section className="section-wrap shop-categories" id="digital-store"><div className="section-row"><SectionHeading eyebrow="THE DIGITAL STORE" title="Small tools for a better workday." copy="Digital products made to be useful from the moment you open them. Start with the available product and explore what’s coming next."/><Link className="underlined-link" href="/products">Visit the digital store <ArrowRight size={15}/></Link></div><ProductCategoryGrid/></section>
-</>}
+
+    <FreeEbookSignup />
+
+    <section className="home-consulting">
+      <div className="home-consulting-inner">
+        <Eyebrow>NEED SOMETHING CUSTOM?</Eyebrow>
+        <h2>Tell us what you’re trying to build.</h2>
+        <p>We’ll help you find or create a practical solution for the way you work.</p>
+        <Link className="button button-dark" href="/contact">Explore consulting <ArrowRight size={16} /></Link>
+      </div>
+    </section>
+
+    <section className="home-final-cta section-wrap">
+      <div><Eyebrow>FLOWMINT AI</Eyebrow><h2>Find something useful.<br /><span>Start building today.</span></h2></div>
+      <div className="home-final-actions">
+        <Link className="button button-dark" href="/products">Explore products <ArrowRight size={16} /></Link>
+        <Link className="text-link" href="/contact">Consultation <ArrowUpRight size={15} /></Link>
+      </div>
+    </section>
+  </>
+}
